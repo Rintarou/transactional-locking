@@ -4,20 +4,19 @@ import interfaces.Transaction;
 import interfaces.Register;
 
 import java.util.HashMap;
-import java.util.Calendar;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcreteTransaction implements Transaction {
 
-  public static AtomicInteger clock = new AtomicInteger();
-  private HashMap<Register, Calendar> lrst;
-  private HashMap<Register, Calendar> lwst;
+  public final static AtomicInteger clock = new AtomicInteger();
+  private HashMap<Register, Register> lrst;
+  private HashMap<Register, Register> lwst;
   private int birthDate;
 
   public ConcreteTransaction() {
-    lrst = new HashMap<Object, Calendar>();
-    lwst = new HashMap<Object, Calendar>();
+    lrst = new HashMap<Register, Register>();
+    lwst = new HashMap<Register, Register>();
   }
 
   public void begin() {
@@ -30,5 +29,10 @@ public class ConcreteTransaction implements Transaction {
 
   }
 
-  public boolean isCommited();
+  public boolean isCommited() {
+
+  }
+
+  public HashMap<Register, Integer> getLrst() { return lrst; }
+  public HashMap<Register, Integer> getLwst() { return lwst; }
 }
