@@ -74,7 +74,7 @@ public class ConcreteTransaction implements Transaction {
   }
 
   public boolean isCommited() {
-    return
+    return isCommited;
   }
 
   public HashMap<Register, Register> getLrst() { return lrst; }
