@@ -7,11 +7,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ConcreteRegister<T> implements Register<T>, Cloneable {
 
   public final AtomicBoolean lock = new AtomicBoolean();
-  private T value;
-  private int time;
+  public T value;
+  public int time;
 
   public ConcreteRegister(T v) {
     value = v;
+    this.lock.set(false);
   }
 
   public T read(Transaction t) throws AbortException {
