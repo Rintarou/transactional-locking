@@ -1,17 +1,18 @@
 package shared;
 
-import interfaces.Transaction;
-import interfaces.Register;
+import interfaces.*;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ConcreteTransaction implements Transaction {
 
   public final static AtomicInteger clock = new AtomicInteger();
-  private HashMap<Register, Register> lrst;
-  private HashMap<Register, Register> lwst;
+  public HashMap<Register, Register> lrst;
+  public HashMap<Register, Register> lwst;
+
   private int birthDate;
   private boolean isCommited;
 
@@ -32,9 +33,12 @@ public class ConcreteTransaction implements Transaction {
     if(isCommited) {
       throw new AbortException("alreadyCommited");
     }
+    ConcreteRegister i;
+
     takeDemLocks();
 
-    for(Iterator<Register> i = rks.iterator(); i.hasNext()) {
+    for(Iterator<Register> it = lrst.keySet().iterator(); it.hasNext();) {
+      i = (ConcreteRegister) it.next();
       if (i.time > this.birthDate) {
         freeDemLocks();
         throw new AbortException("more recent writing");
@@ -43,8 +47,10 @@ public class ConcreteTransaction implements Transaction {
 
     int commitDate = ConcreteTransaction.clock.getAndIncrement();
 
-    for(Iterator<Register> i = lwst.keySet().iterator(); i.hasNext()) {
-      i.value = lwst.get(i).value;
+    for(Iterator<Register> it = lwst.keySet().iterator(); it.hasNext();) {
+      i = (ConcreteRegister) it.next();
+
+      i.value = lwst.get(i).get();
       i.time = commitDate;
     }
 
@@ -54,21 +60,27 @@ public class ConcreteTransaction implements Transaction {
   }
 
   private void takeDemLocks() {
-    for (Iterator<Register> i = lrst.keySet().iterator(); i.hasNext()) {
+    ConcreteRegister i;
+    for (Iterator<Register> it = lrst.keySet().iterator(); it.hasNext();) {
+      i = (ConcreteRegister) it.next();
       while(i.lock.get());
       i.lock.set(true);
     }
-    for (Iterator<Register> i = lwst.keySet().iterator(); i.hasNext()) {
+    for (Iterator<Register> it = lwst.keySet().iterator(); it.hasNext();) {
+      i = (ConcreteRegister) it.next();
       while(i.lock.get());
       i.lock.set(true);
     }
   }
 
   private void freeDemLocks() {
-    for (Iterator<Register> i = lrst.keySet().iterator(); i.hasNext()) {
+    ConcreteRegister i;
+    for (Iterator<Register> it = lrst.keySet().iterator(); it.hasNext();) {
+      i = (ConcreteRegister) it.next();
       i.lock.set(false);
     }
-    for (Iterator<Register> i = lwst.keySet(); i.hasNext()) {
+    for (Iterator<Register> it = lwst.keySet().iterator(); it.hasNext();) {
+      i = (ConcreteRegister) it.next();
       i.lock.set(false);
     }
   }

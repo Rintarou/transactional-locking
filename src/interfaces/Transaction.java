@@ -1,6 +1,8 @@
 package interfaces;
 
-import shared.AbortException;
+import shared.*;
+
+import java.util.HashMap;
 
 public interface Transaction {
 
@@ -10,4 +12,6 @@ public interface Transaction {
 
   public boolean isCommited();
 
+  //public HashMap<Register, Register> getLrst();
+  //public HashMap<Register, Register> getLwst();
 }

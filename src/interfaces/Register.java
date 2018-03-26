@@ -8,4 +8,6 @@ public interface Register<T> {
 
   public void write(Transaction t, T v) throws AbortException;
 
+  public void set(T v);
+  public T get();
 }
