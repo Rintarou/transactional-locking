@@ -17,7 +17,20 @@ public class ConcreteRegister<T> implements Register<T>, Cloneable {
   }
 
   public T read(Transaction t) throws AbortException {
-    return null;
+    HashMap<Register, Register> writes = t.getLwst();
+    if(writes.contains(this)) {
+      return writes.get(this).get();
+    }
+    else{
+      HashMap<Register, Register> reads = t.getLrst();
+      reads.put(this, this.clone());
+      if(reads.get(this).getTime() > t.getBirthDate()){
+        throw new AbortException("Date error ...");
+      }
+      else{
+        return reads.get(this).get();
+      }
+    }
   }
 
   public void write(Transaction t, T v) throws AbortException {
