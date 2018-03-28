@@ -91,4 +91,5 @@ public class ConcreteTransaction implements Transaction {
 
   public HashMap<Register, Register> getLrst() { return lrst; }
   public HashMap<Register, Register> getLwst() { return lwst; }
+  public int getBirthDate(){ return birthDate; };
 }
